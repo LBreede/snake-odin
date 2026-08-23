@@ -19,7 +19,7 @@ HEIGHT: i32 : SCREEN_HEIGHT / SQUARE_SIZE
 // Version
 
 VERSION_MAJOR :: 0
-VERSION_MINOR :: 1
+VERSION_MINOR :: 2
 VERSION_PATCH :: 0
 
 // UI rendering
@@ -53,10 +53,13 @@ tile_uvs := [WIDTH * HEIGHT][2]f32{}
 
 counter_tail := 0
 score := 0
+high_score := 0
 allow_move := false
 
-high_score := 0
 texture: rl.Texture2D
+snack_sound: rl.Sound
+big_snack_sound: rl.Sound
+game_over_sound: rl.Sound
 
 Direction :: enum {
 	NORTH,
@@ -188,6 +191,7 @@ update_game :: proc() {
 			   snake[0].position.x < 0 ||
 			   snake[0].position.y < 0 {
 				game_over = true
+				rl.PlaySound(game_over_sound)
 			}
 
 			// Collision with yourself
@@ -195,6 +199,7 @@ update_game :: proc() {
 				if snake[0].position.x == snake[i].position.x &&
 				   snake[0].position.y == snake[i].position.y {
 					game_over = true
+					rl.PlaySound(game_over_sound)
 				}
 			}
 
@@ -232,6 +237,13 @@ update_game :: proc() {
 				snake[counter_tail].position = snake_position[counter_tail - 1]
 				counter_tail += 1
 				score += 1
+
+				if score % 50 == 0 {
+					rl.PlaySound(big_snack_sound)
+				} else {
+					rl.PlaySound(snack_sound)
+				}
+
 				high_score = max(score, high_score)
 				fruit.active = false
 			}
@@ -397,10 +409,7 @@ draw_game :: proc() {
 		)
 
 		// Credits
-		credits := []cstring {
-			"Programming by Lennart Breede",
-			"Art by Alexandra Setijo-Joesoef",
-		}
+		credits := []cstring{"Programming and sound by Lennart Breede", "Art by Alexandra Setijo-Joesoef"}
 		for text, index in credits {
 			rl.DrawText(
 				text,
@@ -424,11 +433,24 @@ update_draw_frame :: proc() {
 
 main :: proc() {
 	title := fmt.ctprintf("Snake v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
+
 	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, title)
 	defer rl.CloseWindow()
 
+	rl.InitAudioDevice()
+	defer rl.CloseAudioDevice()
+
 	texture = rl.LoadTexture("assets/textures/atlas.png")
 	defer rl.UnloadTexture(texture)
+
+	snack_sound = rl.LoadSound("assets/audio/snack_01.wav")
+	defer rl.UnloadSound(snack_sound)
+
+	big_snack_sound = rl.LoadSound("assets/audio/big_snack_01.wav")
+	defer rl.UnloadSound(big_snack_sound)
+
+	game_over_sound = rl.LoadSound("assets/audio/game_over_01.wav")
+	defer rl.UnloadSound(game_over_sound)
 
 	init_game()
 	defer unload_game()
