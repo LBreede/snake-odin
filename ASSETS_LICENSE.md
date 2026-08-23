@@ -1,6 +1,7 @@
 # Asset licensing
 
-The source code is licensed under the MIT License.
+The source code and audio files in `assets/audio/` are licensed under the MIT
+License.
 
 The artwork in `assets/textures/` was created by Alexandra Setijo-Joesoef and
 is not covered by the MIT License.
