@@ -3,3 +3,9 @@
 
 # GarageBand
 snake.band/
+
+# Nix build outputs
+result
+result-*
+/result
+/result-*
