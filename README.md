@@ -7,3 +7,7 @@
 ## Art process
 
 ![Drawing the artwork for Snake](img/process_2026-08-22.JPG)
+
+## Sound design
+
+![Creating the sound effects with a synthesizer](img/process_2026-08-23.JPG)
