@@ -409,7 +409,10 @@ draw_game :: proc() {
 		)
 
 		// Credits
-		credits := []cstring{"Programming and sound by Lennart Breede", "Art by Alexandra Setijo-Joesoef"}
+		credits := []cstring {
+			"Programming and sound by Lennart Breede",
+			"Art by Alexandra Setijo-Joesoef",
+		}
 		for text, index in credits {
 			rl.DrawText(
 				text,
